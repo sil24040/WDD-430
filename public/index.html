@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crystal Clear</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>Crystal Clear</h1>
+        <p>Browse rooms, manage listings, and contact landlords.</p>
+      </div>
+      <div class="header-actions">
+        <span id="user-label" class="user-label"></span>
+        <button id="logout-button" class="secondary-button" hidden>Logout</button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <section class="dashboard-intro">
+        <p>Welcome to Crystal Clear. Use the controls below to manage your rental listings, review tenant inquiries, or browse available rooms.</p>
+      </section>
+
+      <section id="auth-panel" class="card">
+        <div class="toggle-buttons">
+          <button id="show-login" class="active">Login</button>
+          <button id="show-register">Register</button>
+        </div>
+
+        <form id="login-form" class="form-grid">
+          <h2>Login</h2>
+          <label>
+            Email
+            <input type="email" name="email" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" required />
+          </label>
+          <button type="submit" class="primary-button">Login</button>
+        </form>
+
+        <form id="register-form" class="form-grid hidden">
+          <h2>Register</h2>
+          <label>
+            Name
+            <input type="text" name="name" required />
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" required />
+          </label>
+          <label>
+            Role
+            <select name="role" required>
+              <option value="landlord">Landlord</option>
+              <option value="renter">Renter</option>
+            </select>
+          </label>
+          <button type="submit" class="primary-button">Register</button>
+        </form>
+      </section>
+
+      <section id="app-panel" class="hidden">
+        <div class="grid-2">
+          <div class="card" id="rooms-panel">
+            <div class="card-header">
+              <h2>Available Rooms</h2>
+              <span id="room-count" class="badge"></span>
+            </div>
+            <div class="room-toolbar">
+              <label>
+                Search rooms
+                <input id="room-search" type="search" placeholder="Search by title, description or location" />
+              </label>
+              <label>
+                Filter
+                <select id="room-filter">
+                  <option value="all">All statuses</option>
+                  <option value="available">Available only</option>
+                  <option value="unavailable">Unavailable only</option>
+                </select>
+              </label>
+            </div>
+            <div id="rooms-list" class="rooms-list"></div>
+          </div>
+
+          <div class="workspace-column">
+            <div class="card" id="profile-panel">
+              <div class="card-header">
+                <h2>Account Profile</h2>
+              </div>
+              <form id="profile-form" class="form-grid">
+                <label>
+                  Name
+                  <input type="text" name="name" required />
+                </label>
+                <label>
+                  Email
+                  <input type="email" name="email" required />
+                </label>
+                <label>
+                  Role
+                  <input type="text" name="role" disabled />
+                </label>
+                <label>
+                  Preferred location
+                  <input type="text" name="preferredLocation" placeholder="City or neighborhood" />
+                </label>
+                <label>
+                  Preferred budget
+                  <input type="number" name="preferredBudget" min="0" placeholder="Monthly budget" />
+                </label>
+                <button type="submit" class="primary-button">Save profile</button>
+              </form>
+            </div>
+
+            <div class="card hidden" id="landlord-panel">
+              <div class="card-header">
+                <h2>Landlord Workspace</h2>
+              </div>
+              <p class="muted">Create and manage your listings, respond quickly to renter inquiries, and track payments and maintenance requests.</p>
+              <form id="create-room-form" class="form-grid">
+                <h3>Create Listing</h3>
+                <label>
+                  Title
+                  <input type="text" name="title" required />
+                </label>
+                <label>
+                  Description
+                  <textarea name="description" rows="3" required></textarea>
+                </label>
+                <label>
+                  Location
+                  <input type="text" name="location" required />
+                </label>
+                <label>
+                  Price
+                  <input type="number" name="price" min="0" required />
+                </label>
+                <button type="submit" class="primary-button">Create Room</button>
+              </form>
+              <div class="messages-section">
+                <h3>Messages</h3>
+                <div id="messages-list" class="message-list"></div>
+              </div>
+              <div class="messages-section">
+                <h3>Payments Received</h3>
+                <div id="landlord-payments-list" class="message-list"></div>
+              </div>
+              <div class="messages-section">
+                <h3>Maintenance Requests</h3>
+                <div id="landlord-maintenance-list" class="message-list"></div>
+              </div>
+            </div>
+
+            <div class="card hidden" id="renter-panel">
+              <div class="card-header">
+                <h2>Renter Workspace</h2>
+              </div>
+              <p class="muted">Update your preferences, make rent payments, and request maintenance for your stay.</p>
+              <div class="tab-nav" role="tablist">
+                <button id="tab-pay-rent" class="tab-button active" type="button" role="tab">Pay Rent</button>
+                <button id="tab-maintenance" class="tab-button" type="button" role="tab">Maintenance Request</button>
+              </div>
+              <div id="pay-rent-tab" class="tab-panel">
+                <div class="messages-section">
+                  <h3>Pay Rent</h3>
+                  <div id="renter-pay-rent-list" class="message-list"></div>
+                </div>
+                <div class="messages-section">
+                  <h3>Payment History</h3>
+                  <div id="renter-payments-list" class="message-list"></div>
+                </div>
+              </div>
+              <div id="maintenance-tab" class="tab-panel hidden">
+                <div class="messages-section">
+                  <h3>Submit a Maintenance Request</h3>
+                  <form id="maintenance-form" class="form-grid">
+                    <label>
+                      Room
+                      <select id="maintenance-room-select" name="roomId" required></select>
+                    </label>
+                    <label>
+                      Issue description
+                      <textarea name="description" rows="4" required></textarea>
+                    </label>
+                    <button type="submit" class="primary-button">Submit request</button>
+                  </form>
+                </div>
+                <div class="messages-section">
+                  <h3>Maintenance Status</h3>
+                  <div id="renter-maintenance-list" class="message-list"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div id="status-banner" class="status-banner" hidden></div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{
+  "users": [
+    {
+      "id": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "name": "Alice Landlord",
+      "email": "alice@example.com",
+      "role": "landlord",
+      "passwordHash": "$2a$10$KxqSfAkMrG/6rFWkgITewOxBX0cAx8seRqz0yVo3a8u9YDJTDn6a2"
+    },
+    {
+      "id": "9df9a9f2-04a3-44af-b457-d280e5cc07c9",
+      "name": "Bob Renter",
+      "email": "bob@example.com",
+      "role": "renter",
+      "passwordHash": "$2a$10$3YdPm7xW5zq4fcE45EGgj.cjbYRDocAkaM2iSWraC.w92gtbhn7mC"
+    },
+    {
+      "id": "2e059a34-82a5-474d-8aaf-8d98e9cea339",
+      "name": "Sophie",
+      "email": "sil24040@byui.edu",
+      "role": "landlord",
+      "passwordHash": "$2a$10$8dv5DEJkzyO3qYFthDmFYOV5Pr8FaP6iVDLWQvbPhEZ5uYfI/o47O"
+    },
+    {
+      "id": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
+      "name": "Sophie Da Silveira",
+      "email": "sophiesilveira9@gmail.com",
+      "role": "renter",
+      "passwordHash": "$2a$10$z3vunlxxYYXI.hZmKllt3ezWOtaWkEwtt64bKpFH0Hs0vWeCAqkgS"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "f045642d-e7be-4dae-9e88-a623d4fc4011",
+      "title": "Sunny Downtown Studio",
+      "description": "Bright studio with easy access to transit, shops, and parks.",
+      "price": 1450,
+      "location": "Downtown",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "available": true
+    },
+    {
+      "id": "78fcb015-1e61-4f04-8037-8469be1c6c38",
+      "title": "Cozy Private Room",
+      "description": "Comfortable furnished room with shared kitchen and backyard.",
+      "price": 900,
+      "location": "Residential",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "available": true
+    }
+  ],
+  "messages": []
+}

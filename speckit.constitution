@@ -1,0 +1,37 @@
+# Speckit Constitution
+
+## Purpose
+This constitution defines the core engineering principles for the project, centered on code quality, testing standards, user experience consistency, and performance requirements.
+
+## Principles
+
+### 1. Code Quality
+- Write clean, readable code using consistent naming, spacing, and structure.
+- Prefer explicit, self-documenting code over clever one-liners.
+- Follow established language and framework conventions.
+- Keep functions and components focused on a single responsibility.
+- Review code through collaboration and constructive feedback before merging.
+
+### 2. Testing Standards
+- Every feature must have automated tests covering expected behavior and edge cases.
+- Maintain a high level of test coverage for critical logic and user-facing flows.
+- Use unit tests for small units, integration tests for component interactions, and end-to-end tests for user journeys.
+- Run tests locally before commits and ensure tests pass in continuous integration.
+- Treat failing tests as blockers, not optional warnings.
+
+### 3. User Experience Consistency
+- Follow a consistent visual and interaction design across the product.
+- Use shared components, spacing, and typography patterns to maintain UI harmony.
+- Prioritize accessibility and usability for all users.
+- Ensure behavior is predictable and responsive across devices.
+- Document design decisions and keep the experience coherent as the product grows.
+
+### 4. Performance Requirements
+- Optimize for fast load times and smooth runtime behavior.
+- Avoid unnecessary work in render paths, network requests, and data processing.
+- Measure performance with metrics, not assumptions.
+- Keep resource usage efficient and respect device constraints.
+- Continuously identify and address bottlenecks as part of regular development.
+
+## Commitment
+We commit to applying these principles in every release, balancing speed with responsibility, and improving quality continuously through discipline and collaboration.
