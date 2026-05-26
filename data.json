@@ -19,7 +19,9 @@
       "name": "Sophie",
       "email": "sil24040@byui.edu",
       "role": "landlord",
-      "passwordHash": "$2a$10$8dv5DEJkzyO3qYFthDmFYOV5Pr8FaP6iVDLWQvbPhEZ5uYfI/o47O"
+      "passwordHash": "$2a$10$8dv5DEJkzyO3qYFthDmFYOV5Pr8FaP6iVDLWQvbPhEZ5uYfI/o47O",
+      "preferredLocation": "",
+      "preferredBudget": ""
     },
     {
       "id": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
@@ -47,7 +49,76 @@
       "location": "Residential",
       "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
       "available": true
+    },
+    {
+      "id": "7b431ec6-b2d0-4cf4-8d9e-d648b29988c8",
+      "title": "Room share",
+      "description": "In Elephant and Castle - 2 rooms available ",
+      "price": 1200,
+      "location": "London England",
+      "ownerId": "2e059a34-82a5-474d-8aaf-8d98e9cea339",
+      "available": true
     }
   ],
-  "messages": []
+  "messages": [],
+  "payments": [
+    {
+      "id": "22e50c8b-63c4-4c95-ba3b-8ac5c06894ac",
+      "roomId": "f045642d-e7be-4dae-9e88-a623d4fc4011",
+      "renterId": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "amount": 1450,
+      "createdAt": "2026-05-17T04:33:50.223Z",
+      "status": "paid"
+    },
+    {
+      "id": "2fd5f80f-e503-4246-97c9-9a3b23ed7db8",
+      "roomId": "f045642d-e7be-4dae-9e88-a623d4fc4011",
+      "renterId": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "amount": 1450,
+      "createdAt": "2026-05-17T04:33:50.905Z",
+      "status": "paid"
+    },
+    {
+      "id": "8831b2df-106b-4697-ab96-508a8e4c3b30",
+      "roomId": "f045642d-e7be-4dae-9e88-a623d4fc4011",
+      "renterId": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "amount": 1450,
+      "createdAt": "2026-05-17T04:33:51.067Z",
+      "status": "paid"
+    },
+    {
+      "id": "5d696679-f69e-4b25-9ae0-8d842970cf4c",
+      "roomId": "f045642d-e7be-4dae-9e88-a623d4fc4011",
+      "renterId": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "amount": 1450,
+      "createdAt": "2026-05-17T04:33:51.212Z",
+      "status": "paid"
+    },
+    {
+      "id": "4e163708-5ed4-4273-96a2-f902c83269bd",
+      "roomId": "78fcb015-1e61-4f04-8037-8469be1c6c38",
+      "renterId": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "amount": 900,
+      "createdAt": "2026-05-17T04:33:56.063Z",
+      "status": "paid"
+    }
+  ],
+  "maintenanceRequests": [
+    {
+      "id": "cf991fab-d370-4505-8e9b-bab5df3b8449",
+      "roomId": "f045642d-e7be-4dae-9e88-a623d4fc4011",
+      "requesterId": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "description": "The sink is broken!",
+      "status": "pending",
+      "response": "",
+      "createdAt": "2026-05-17T04:34:06.721Z",
+      "updatedAt": "2026-05-17T04:34:06.721Z"
+    }
+  ]
 }
