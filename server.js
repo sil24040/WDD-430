@@ -324,15 +324,20 @@ app.put('/api/maintenance/:id', requireAuth, requireRole('landlord'), (req, res)
 app.get('/api/rooms', (req, res) => {
   const rooms = data.rooms.map((room) => ({
     ...room,
-    ownerName: data.users.find((owner) => owner.id === room.ownerId)?.name || 'Unknown'
+    ownerName: data.users.find((owner) => owner.id === room.ownerId)?.name || 'Unknown',
+    type: room.type || 'Apartment',
+    bedrooms: room.bedrooms || 1,
+    bathrooms: room.bathrooms || 1,
+    imageUrl: room.imageUrl || 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
+    amenities: room.amenities || ['High-speed wifi', 'Street parking', 'Laundry access']
   }));
   res.json({ rooms });
 });
 
 app.post('/api/rooms', requireAuth, requireRole('landlord'), (req, res) => {
-  const { title, description, price, location } = req.body;
+  const { title, description, price, location, type, bedrooms, bathrooms, imageUrl } = req.body;
   if (!title || !description || !price || !location) {
-    return res.status(400).json({ error: 'All room fields are required.' });
+    return res.status(400).json({ error: 'Title, description, price, and location are required.' });
   }
 
   const room = {
@@ -341,6 +346,11 @@ app.post('/api/rooms', requireAuth, requireRole('landlord'), (req, res) => {
     description,
     price: Number(price),
     location,
+    type: type || 'Apartment',
+    bedrooms: bedrooms !== undefined ? Number(bedrooms) : 1,
+    bathrooms: bathrooms !== undefined ? Number(bathrooms) : 1,
+    imageUrl: imageUrl?.trim() || 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80',
+    amenities: ['High-speed wifi', 'Street parking', 'Laundry access'],
     ownerId: req.session.userId,
     available: true
   };
@@ -356,12 +366,16 @@ app.put('/api/rooms/:id', requireAuth, requireRole('landlord'), (req, res) => {
     return res.status(404).json({ error: 'Room not found.' });
   }
 
-  const { title, description, price, location, available } = req.body;
+  const { title, description, price, location, available, type, bedrooms, bathrooms, imageUrl } = req.body;
   room.title = title || room.title;
   room.description = description || room.description;
   room.price = price !== undefined ? Number(price) : room.price;
   room.location = location || room.location;
   room.available = available !== undefined ? Boolean(available) : room.available;
+  room.type = type || room.type || 'Apartment';
+  room.bedrooms = bedrooms !== undefined ? Number(bedrooms) : room.bedrooms || 1;
+  room.bathrooms = bathrooms !== undefined ? Number(bathrooms) : room.bathrooms || 1;
+  room.imageUrl = imageUrl !== undefined ? imageUrl.trim() || room.imageUrl : room.imageUrl;
 
   saveData(data);
   res.json({ room });

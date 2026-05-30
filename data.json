@@ -29,6 +29,27 @@
       "email": "sophiesilveira9@gmail.com",
       "role": "renter",
       "passwordHash": "$2a$10$z3vunlxxYYXI.hZmKllt3ezWOtaWkEwtt64bKpFH0Hs0vWeCAqkgS"
+    },
+    {
+      "id": "4c7e919c-d883-407d-b424-701b31f66e0d",
+      "name": "Ivan Ribeiro",
+      "email": "evr332@byui.edu",
+      "role": "renter",
+      "passwordHash": "$2a$10$JSP8HWf2b5Veq9BbyXTeEuHb//m.5DnkmAYfcmk9aVBKl18Au8/Z2"
+    },
+    {
+      "id": "571d4c4b-7c40-4716-a5d6-153168b8f514",
+      "name": "testadmin",
+      "email": "testadmin@byui.edu",
+      "role": "landlord",
+      "passwordHash": "$2a$10$1zbpFwiecsI59MWv7pLkMehHUZgVtSnBWihQx68saIz9P4/79RqxW"
+    },
+    {
+      "id": "789c9c99-ced0-4d0f-b787-f57ed17a8500",
+      "name": "testrenter",
+      "email": "testrenter@byui.edu",
+      "role": "renter",
+      "passwordHash": "$2a$10$fEFCez5wJ7T7r.dpkpYejumoF.HAmCZTaUPUZZFCZ7eGgkFNHGheS"
     }
   ],
   "rooms": [
@@ -105,6 +126,33 @@
       "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
       "amount": 900,
       "createdAt": "2026-05-17T04:33:56.063Z",
+      "status": "paid"
+    },
+    {
+      "id": "975ab4b3-1071-4eb1-ac74-77f3b500ac01",
+      "roomId": "f045642d-e7be-4dae-9e88-a623d4fc4011",
+      "renterId": "4c7e919c-d883-407d-b424-701b31f66e0d",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "amount": 1450,
+      "createdAt": "2026-05-26T20:08:28.304Z",
+      "status": "paid"
+    },
+    {
+      "id": "93bc9d16-830c-4951-bbd2-e7f587442be4",
+      "roomId": "f045642d-e7be-4dae-9e88-a623d4fc4011",
+      "renterId": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "amount": 1450,
+      "createdAt": "2026-05-27T17:38:17.820Z",
+      "status": "paid"
+    },
+    {
+      "id": "6a5e5384-0f7d-408d-94ef-224c0586b64a",
+      "roomId": "f045642d-e7be-4dae-9e88-a623d4fc4011",
+      "renterId": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "amount": 1450,
+      "createdAt": "2026-05-27T17:38:18.487Z",
       "status": "paid"
     }
   ],
