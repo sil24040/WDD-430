@@ -60,7 +60,16 @@
       "available": true
     }
   ],
-  "messages": [],
+  "messages": [
+    {
+      "id": "21ac399e-7569-4585-867b-47ca4c8cc093",
+      "roomId": "f045642d-e7be-4dae-9e88-a623d4fc4011",
+      "senderId": "365ee4db-bf77-45a2-a7ac-7ba6715944a5",
+      "ownerId": "326c9538-931f-40ae-9b37-1b8fb800de91",
+      "message": "Hello!",
+      "createdAt": "2026-06-08T18:16:57.198Z"
+    }
+  ],
   "payments": [
     {
       "id": "22e50c8b-63c4-4c95-ba3b-8ac5c06894ac",
