@@ -427,8 +427,9 @@ app.get('/api/messages', requireAuth, requireRole('landlord'), (req, res) => {
   res.json({ messages });
 });
 
+// Astro handles the frontend — return 404 for unknown routes
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.status(404).json({ error: 'Not found' });
 });
 
 const PORT = process.env.PORT || 4000;
@@ -440,4 +441,3 @@ if (require.main === module) {
 }
 
 module.exports = app;
-

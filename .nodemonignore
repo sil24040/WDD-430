@@ -1,0 +1,5 @@
+data.json
+public/
+dist/
+node_modules/
+*.test.js
