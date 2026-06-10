@@ -28,6 +28,24 @@ const userLabel = document.getElementById('user-label');
 const statusBanner = document.getElementById('status-banner');
 const roomSearchInput = document.getElementById('room-search');
 const roomAvailabilityFilter = document.getElementById('room-filter');
+const roomLocationFilter = document.getElementById('room-location-filter');
+const roomTypeFilter = document.getElementById('room-type-filter');
+const priceMinFilter = document.getElementById('price-min-filter');
+const priceMaxFilter = document.getElementById('price-max-filter');
+const browsePanelTab = document.getElementById('browse-panel-tab');
+const dashboardPanelTab = document.getElementById('dashboard-panel-tab');
+const browseSection = document.getElementById('browse-section');
+const dashboardSection = document.getElementById('dashboard-section');
+const supportSection = document.getElementById('support-section');
+const navListingsButton = document.getElementById('nav-listings');
+const navDashboardButton = document.getElementById('nav-dashboard');
+const navSupportButton = document.getElementById('nav-support');
+const scrollToListingsButton = document.getElementById('scroll-to-listings');
+const scrollToAuthButton = document.getElementById('scroll-to-auth');
+const hamburgerMenu = document.getElementById('hamburger-menu');
+const appHeader = document.querySelector('.app-header');
+const topNav = document.querySelector('.top-nav');
+const headerActions = document.querySelector('.header-actions');
 
 let currentUser = null;
 let allRooms = [];
@@ -73,6 +91,19 @@ function renderRoomCard(room) {
   const ownerLabel = room.ownerName ? `Owner: ${room.ownerName}` : 'Owner: Unknown';
   const availability = room.available ? 'Available' : 'Unavailable';
   const isOwner = currentUser && currentUser.id === room.ownerId;
+  const propertyType = room.type || 'Apartment';
+  const bedrooms = room.bedrooms || 1;
+  const bathrooms = room.bathrooms || 1;
+  const imageUrl = room.imageUrl || 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80';
+  const amenities = Array.isArray(room.amenities) ? room.amenities.slice(0, 4) : [];
+  const matchesPreference = currentUser && currentUser.role === 'renter' && (
+    (currentUser.preferredLocation && room.location.toLowerCase().includes(currentUser.preferredLocation.toLowerCase())) ||
+    (currentUser.preferredBudget && room.price <= Number(currentUser.preferredBudget))
+  );
+
+  const suggestionTag = matchesPreference
+    ? '<span class="room-chip">Suggested for you</span>'
+    : '';
 
   const paySection = currentUser && currentUser.role === 'renter' && !isOwner && room.available
     ? `
@@ -120,6 +151,22 @@ function renderRoomCard(room) {
               <input type="number" name="price" min="0" value="${room.price}" />
             </label>
             <label>
+              Property type
+              <input name="type" value="${propertyType}" />
+            </label>
+            <label>
+              Bedrooms
+              <input type="number" name="bedrooms" min="0" value="${bedrooms}" />
+            </label>
+            <label>
+              Bathrooms
+              <input type="number" name="bathrooms" min="0" value="${bathrooms}" />
+            </label>
+            <label>
+              Image URL
+              <input type="url" name="imageUrl" value="${room.imageUrl || ''}" />
+            </label>
+            <label>
               Available
               <select name="available">
                 <option value="true" ${room.available ? 'selected' : ''}>Yes</option>
@@ -134,28 +181,42 @@ function renderRoomCard(room) {
     : '';
 
   return `
-    <div class="room-card" data-room-id="${room.id}">
-      <h3>${room.title}</h3>
-      <p>${room.description}</p>
-      <div class="room-meta">
-        <span>${ownerLabel}</span>
-        <span>${room.location}</span>
-        <span>${formatPrice(room.price)}</span>
-        <span class="badge">${availability}</span>
+    <article class="room-card" data-room-id="${room.id}">
+      <div class="room-card-media">
+        <img src="${imageUrl}" alt="${room.title}" />
       </div>
-      <div class="room-form-actions">
-        <button data-room-id="${room.id}" class="secondary-button details-toggle-button">View details</button>
+      <div class="room-card-footer">
+        <div class="room-card-title">
+          <h3>${room.title}</h3>
+          ${suggestionTag}
+        </div>
+        <div class="room-meta">
+          <span>${propertyType}</span>
+          <span>${bedrooms} bd</span>
+          <span>${bathrooms} ba</span>
+          <span>${room.location}</span>
+        </div>
+        <p>${room.description}</p>
+        <div class="property-detail-list">
+          <span><strong>Price:</strong> ${formatPrice(room.price)}</span>
+          <span><strong>Owner:</strong> ${room.ownerName || 'Unknown'}</span>
+          <span><strong>Status:</strong> ${availability}</span>
+          ${amenities.length ? `<span><strong>Amenities:</strong> ${amenities.join(', ')}</span>` : ''}
+        </div>
+        <div class="room-form-actions">
+          <button data-room-id="${room.id}" class="secondary-button details-toggle-button">View details</button>
+        </div>
+        <div id="room-details-${room.id}" class="room-detail-panel hidden">
+          <p><strong>Status:</strong> ${availability}</p>
+          <p><strong>Location:</strong> ${room.location}</p>
+          <p><strong>Price:</strong> ${formatPrice(room.price)}</p>
+          <p><strong>Owner:</strong> ${ownerLabel.replace('Owner: ', '')}</p>
+        </div>
+        ${paySection}
+        ${contactSection}
+        ${ownerControls}
       </div>
-      <div id="room-details-${room.id}" class="room-detail-panel hidden">
-        <p><strong>Status:</strong> ${availability}</p>
-        <p><strong>Location:</strong> ${room.location}</p>
-        <p><strong>Price:</strong> ${formatPrice(room.price)}</p>
-        <p><strong>Owner:</strong> ${ownerLabel.replace('Owner: ', '')}</p>
-      </div>
-      ${paySection}
-      ${contactSection}
-      ${ownerControls}
-    </div>
+    </article>
   `;
 }
 
@@ -295,14 +356,21 @@ function populateMaintenanceRooms() {
 function renderRooms() {
   const query = roomSearchInput.value.trim().toLowerCase();
   const availability = roomAvailabilityFilter.value;
+  const selectedLocation = roomLocationFilter?.value || 'all';
+  const selectedType = roomTypeFilter?.value || 'all';
+  const minPrice = Number(priceMinFilter?.value) || 0;
+  const maxPrice = Number(priceMaxFilter?.value) || Infinity;
 
   const filteredRooms = allRooms.filter((room) => {
-    const text = `${room.title} ${room.description} ${room.location}`.toLowerCase();
+    const text = `${room.title} ${room.description} ${room.location} ${room.type}`.toLowerCase();
     const matchesQuery = !query || text.includes(query);
     const matchesAvailability = availability === 'all'
       || (availability === 'available' && room.available)
       || (availability === 'unavailable' && !room.available);
-    return matchesQuery && matchesAvailability;
+    const matchesLocation = selectedLocation === 'all' || room.location === selectedLocation;
+    const matchesType = selectedType === 'all' || (room.type || 'Apartment') === selectedType;
+    const matchesPrice = room.price >= minPrice && room.price <= maxPrice;
+    return matchesQuery && matchesAvailability && matchesLocation && matchesType && matchesPrice;
   });
 
   roomsList.innerHTML = filteredRooms.length
@@ -312,9 +380,25 @@ function renderRooms() {
   addRoomListeners();
 }
 
+function populateFilterOptions() {
+  if (!roomLocationFilter || !roomTypeFilter) return;
+
+  const locations = Array.from(new Set(allRooms.map((room) => room.location || 'Other'))).sort();
+  const types = Array.from(new Set(allRooms.map((room) => room.type || 'Apartment'))).sort();
+
+  roomLocationFilter.innerHTML = ['<option value="all">All locations</option>',
+    ...locations.map((location) => `<option value="${location}">${location}</option>`)
+  ].join('');
+
+  roomTypeFilter.innerHTML = ['<option value="all">All types</option>',
+    ...types.map((type) => `<option value="${type}">${type}</option>`)
+  ].join('');
+}
+
 async function loadRooms() {
   const data = await apiFetch('/api/rooms');
   allRooms = data.rooms;
+  populateFilterOptions();
   renderRooms();
   populateMaintenanceRooms();
 
@@ -351,6 +435,7 @@ async function loadMaintenanceRequests() {
   } else {
     renterMaintenanceList.innerHTML = renderMaintenanceRequests(maintenanceRequests);
   }
+  addMaintenanceUpdateListeners();
 }
 
 async function loadProfile() {
@@ -388,6 +473,29 @@ function showApp() {
   if (currentUser.role === 'renter') {
     showRenterTab('pay');
   }
+  showAppTab('browse');
+}
+
+function updateTopNav(activeTab) {
+  if (!navListingsButton || !navDashboardButton || !navSupportButton) return;
+  navListingsButton.classList.toggle('active', activeTab === 'browse');
+  navDashboardButton.classList.toggle('active', activeTab === 'dashboard');
+  navSupportButton.classList.toggle('active', activeTab === 'support');
+}
+
+function showAppTab(tabName) {
+  const showBrowse = tabName === 'browse';
+  const showDashboard = tabName === 'dashboard';
+  const showSupport = tabName === 'support';
+
+  browsePanelTab.classList.toggle('active', showBrowse);
+  dashboardPanelTab.classList.toggle('active', showDashboard);
+  browseSection.classList.toggle('hidden', !showBrowse);
+  dashboardSection.classList.toggle('hidden', !showDashboard);
+  if (supportSection) {
+    supportSection.classList.toggle('hidden', !showSupport);
+  }
+  updateTopNav(tabName);
 }
 
 function showAuth() {
@@ -488,6 +596,10 @@ function addRoomListeners() {
         description: formData.get('description'),
         location: formData.get('location'),
         price: Number(formData.get('price')),
+        type: formData.get('type'),
+        bedrooms: Number(formData.get('bedrooms')),
+        bathrooms: Number(formData.get('bathrooms')),
+        imageUrl: formData.get('imageUrl'),
         available: formData.get('available') === 'true'
       };
 
@@ -521,25 +633,27 @@ function addPayRentListeners() {
   });
 }
 
-document.querySelectorAll('.maintenance-update-form').forEach((form) => {
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const requestId = form.dataset.requestId;
-    const formData = new FormData(form);
-    const body = {
-      status: formData.get('status'),
-      response: formData.get('response')
-    };
+function addMaintenanceUpdateListeners() {
+  document.querySelectorAll('.maintenance-update-form').forEach((form) => {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const requestId = form.dataset.requestId;
+      const formData = new FormData(form);
+      const body = {
+        status: formData.get('status'),
+        response: formData.get('response')
+      };
 
-    try {
-      await apiFetch(`/api/maintenance/${requestId}`, { method: 'PUT', body });
-      showStatus('Maintenance request updated.');
-      await loadMaintenanceRequests();
-    } catch (error) {
-      showStatus(error.message, 'error');
-    }
+      try {
+        await apiFetch(`/api/maintenance/${requestId}`, { method: 'PUT', body });
+        showStatus('Maintenance request updated.');
+        await loadMaintenanceRequests();
+      } catch (error) {
+        showStatus(error.message, 'error');
+      }
+    });
   });
-});
+}
 
 showLogin.addEventListener('click', () => toggleAuthForm(true));
 showRegister.addEventListener('click', () => toggleAuthForm(false));
@@ -555,8 +669,57 @@ logoutButton.addEventListener('click', async () => {
   }
 });
 
+// Hamburger menu toggle
+hamburgerMenu?.addEventListener('click', () => {
+  const isOpen = hamburgerMenu.getAttribute('aria-expanded') === 'true';
+  hamburgerMenu.setAttribute('aria-expanded', !isOpen);
+  appHeader.classList.toggle('menu-open');
+  topNav.classList.toggle('active');
+});
+
+// Close menu when navigation link is clicked
+[navListingsButton, navDashboardButton, navSupportButton]?.forEach(button => {
+  button?.addEventListener('click', () => {
+    hamburgerMenu.setAttribute('aria-expanded', 'false');
+    appHeader.classList.remove('menu-open');
+    topNav.classList.remove('active');
+  });
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', (event) => {
+  if (!appHeader.contains(event.target) && hamburgerMenu.getAttribute('aria-expanded') === 'true') {
+    hamburgerMenu.setAttribute('aria-expanded', 'false');
+    appHeader.classList.remove('menu-open');
+    topNav.classList.remove('active');
+  }
+});
+
 tabPayRentButton.addEventListener('click', () => showRenterTab('pay'));
 tabMaintenanceButton.addEventListener('click', () => showRenterTab('maintenance'));
+
+browsePanelTab.addEventListener('click', () => showAppTab('browse'));
+dashboardPanelTab.addEventListener('click', () => showAppTab('dashboard'));
+navListingsButton?.addEventListener('click', () => showAppTab('browse'));
+navDashboardButton?.addEventListener('click', () => showAppTab('dashboard'));
+navSupportButton?.addEventListener('click', () => {
+  showAppTab('support');
+  supportSection?.scrollIntoView({ behavior: 'smooth' });
+});
+
+scrollToListingsButton?.addEventListener('click', () => {
+  document.getElementById('rooms-panel')?.scrollIntoView({ behavior: 'smooth' });
+});
+scrollToAuthButton?.addEventListener('click', () => {
+  document.getElementById('auth-panel')?.scrollIntoView({ behavior: 'smooth' });
+});
+
+roomSearchInput.addEventListener('input', renderRooms);
+roomAvailabilityFilter.addEventListener('change', renderRooms);
+roomLocationFilter?.addEventListener('change', renderRooms);
+roomTypeFilter?.addEventListener('change', renderRooms);
+priceMinFilter?.addEventListener('input', renderRooms);
+priceMaxFilter?.addEventListener('input', renderRooms);
 
 loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -605,7 +768,11 @@ createRoomForm.addEventListener('submit', async (event) => {
         title: formData.get('title'),
         description: formData.get('description'),
         location: formData.get('location'),
-        price: formData.get('price')
+        price: formData.get('price'),
+        type: formData.get('type'),
+        bedrooms: Number(formData.get('bedrooms')),
+        bathrooms: Number(formData.get('bathrooms')),
+        imageUrl: formData.get('imageUrl')
       }
     });
     createRoomForm.reset();
@@ -656,9 +823,6 @@ profileForm.addEventListener('submit', async (event) => {
     showStatus(error.message, 'error');
   }
 });
-
-roomSearchInput.addEventListener('input', renderRooms);
-roomAvailabilityFilter.addEventListener('change', renderRooms);
 
 window.addEventListener('DOMContentLoaded', async () => {
   try {
